@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -12,7 +11,7 @@ import (
 
 var (
 	googleOauthConfig = &oauth2.Config{
-		RedirectURL:  "http://localhost/4001/callback",
+		RedirectURL:  "http://localhost:4001/callback",
 		ClientID:     ClientID,
 		ClientSecret: ClientSecret,
 		// What permissions we want to ask from the user.
@@ -24,45 +23,47 @@ var (
 )
 
 func (app *application) Home(w http.ResponseWriter, r *http.Request) {
-	var html = `<html><body> <a href="/user/login"> Google Login </a> </body> </html>`
-	fmt.Fprint(w, html)
+	var htmlIndex = `<html>
+	<body>
+		<a href="/user/login">Google Log In</a>
+	</body>
+	</html>`
+
+	fmt.Fprintf(w, htmlIndex)
 }
 
 func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	url := googleOauthConfig.AuthCodeURL(randomState)
-	app.infoLog.Println("url", url)
-
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
 // Callback gets a respond from google and try to get the user info.
 func (app *application) Callback(w http.ResponseWriter, r *http.Request) {
 	if r.FormValue("state") != randomState {
-		app.errorLog.Print("State is not valid")
+		fmt.Println("State is not valid")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
-	token, err := googleOauthConfig.Exchange(context.Background(), r.FormValue("code"))
+	token, err := googleOauthConfig.Exchange(oauth2.NoContext, r.FormValue("code"))
 	if err != nil {
-		app.errorLog.Printf("Could not get token: %s", err.Error())
+		fmt.Printf("code exchange failed: %s", err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	app.infoLog.Println("access token: ", token.AccessToken)
-	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
+	response, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
 	if err != nil {
-		app.errorLog.Printf("Could not create get request: %s", err.Error())
+		fmt.Printf("failed getting user info: %s", err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		app.errorLog.Printf("Could not parse response: %s", err.Error())
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-		return
 
+	defer response.Body.Close()
+	contents, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		fmt.Printf("failed reading response body: %s", err.Error())
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
 	}
-	fmt.Fprintf(w, string(body))
+	fmt.Fprintf(w, string(contents))
 }
