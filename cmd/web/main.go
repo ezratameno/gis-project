@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"flag"
 	"log"
 	"net/http"
@@ -19,6 +20,8 @@ type application struct {
 }
 
 func main() {
+	gob.Register(UserInfo{})
+
 	addr := flag.String("addr", ":4001", "Http network address")
 	// Define a new command-line flag for the session secret (a random key which
 	// will be used to encrypt and authenticate session cookies). It should be 32

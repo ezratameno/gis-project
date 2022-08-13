@@ -25,8 +25,10 @@ func (app *application) routes() http.Handler {
 	// Update these routes to use the new dynamic middleware chain followed
 	// by the appropriate handler function.
 	mux := pat.New()
-	mux.Get("/", dynamicMiddleware.ThenFunc(app.Home))
 	mux.Get("/user/login", dynamicMiddleware.ThenFunc(app.Login))
+	mux.Get("/user/logout", dynamicMiddleware.ThenFunc(app.Logout))
+	mux.Get("/", dynamicMiddleware.ThenFunc(app.Home))
+
 	mux.Get("/callback", dynamicMiddleware.ThenFunc(app.Callback))
 
 	mux.NotFound = http.HandlerFunc(app.NotFound)

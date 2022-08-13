@@ -4,9 +4,6 @@ import (
 	"path/filepath"
 	"text/template"
 	"time"
-
-	"github.com/ezratameno/lets_go/pkg/forms"
-	"github.com/ezratameno/lets_go/pkg/models"
 )
 
 // Define a templateData type to act as the holding structure for
@@ -20,11 +17,9 @@ import (
 type templateData struct {
 	CurrentYear     int
 	Flash           string
-	Form            *forms.Form
-	Snippet         *models.Snippet
-	Snippets        []*models.Snippet
 	IsAuthenticated bool
 	CSRFToken       string
+	Email           string
 }
 
 // Create a humanDate function which returns a nicely formatted string
@@ -47,7 +42,7 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 	// Use the filepath.Glob function to get a slice of all filepaths with
 	// the extension '.page.tmpl'. This essentially gives us a slice of all the
 	// 'page' templates for the application.
-	pages, err := filepath.Glob(filepath.Join(dir, "*.page.tmpl"))
+	pages, err := filepath.Glob(filepath.Join(dir, "*.page.go.tmpl"))
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +65,7 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 		// Use the ParseGlob method to add any 'layout' templates to the
 		// template set (in our case, it's just the 'base' layout at the
 		// moment).
-		ts, err = ts.ParseGlob(filepath.Join(dir, "*.layout.tmpl"))
+		ts, err = ts.ParseGlob(filepath.Join(dir, "*.layout.go.tmpl"))
 		if err != nil {
 			return nil, err
 		}
@@ -78,7 +73,7 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 		// Use the ParseGlob method to add any 'partial' templates to the
 		// template set (in our case, it's just the 'footer' partial at the
 		// moment).
-		ts, err = ts.ParseGlob(filepath.Join(dir, "*.partial.tmpl"))
+		ts, err = ts.ParseGlob(filepath.Join(dir, "*.partial.go.tmpl"))
 		if err != nil {
 			return nil, err
 		}

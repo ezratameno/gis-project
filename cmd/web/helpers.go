@@ -77,11 +77,14 @@ func (app *application) addDefalutData(td *templateData, r *http.Request) *templ
 
 	// Add the authentication status to the template data.
 	td.IsAuthenticated = app.isAuthenticated(r)
+	if app.session.Get(r, "user") != nil {
+		td.Email = app.session.Get(r, "user").(UserInfo).Email
 
+	}
 	return td
 }
 
 // Return true if the current request is from authenticated user, otherwise return false.
 func (app *application) isAuthenticated(r *http.Request) bool {
-	return app.session.Exists(r, "authenticatedUserID")
+	return app.session.Exists(r, "user")
 }

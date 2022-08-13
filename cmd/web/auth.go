@@ -1,13 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
+
+// UserInfo is the user information we get from google
+type UserInfo struct {
+	ID    string `json:"id"`
+	Email string `json:"email"`
+}
 
 var (
 	googleOauthConfig = &oauth2.Config{
@@ -22,38 +28,36 @@ var (
 	randomState = "random"
 )
 
-func (app *application) Home(w http.ResponseWriter, r *http.Request) {
-	var htmlIndex = `<html>
-	<body>
-		<a href="/user/login">Google Log In</a>
-	</body>
-	</html>`
-
-	fmt.Fprintf(w, htmlIndex)
-}
-
 func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	url := googleOauthConfig.AuthCodeURL(randomState)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+
+}
+
+func (app *application) Logout(w http.ResponseWriter, r *http.Request) {
+	app.session.Remove(r, "user")
+	app.session.Put(r, "flash", "You've been logged out successfully!")
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+
 }
 
 // Callback gets a respond from google and try to get the user info.
 func (app *application) Callback(w http.ResponseWriter, r *http.Request) {
 	if r.FormValue("state") != randomState {
-		fmt.Println("State is not valid")
+		app.errorLog.Println("State is not valid")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
 	token, err := googleOauthConfig.Exchange(oauth2.NoContext, r.FormValue("code"))
 	if err != nil {
-		fmt.Printf("code exchange failed: %s", err.Error())
+		app.errorLog.Printf("code exchange failed: %s", err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 	response, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
 	if err != nil {
-		fmt.Printf("failed getting user info: %s", err.Error())
+		app.errorLog.Printf("failed getting user info: %s", err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
@@ -61,9 +65,23 @@ func (app *application) Callback(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Printf("failed reading response body: %s", err.Error())
+		app.errorLog.Printf("failed reading response body: %s", err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	fmt.Fprintf(w, string(contents))
+	app.infoLog.Println(string(contents))
+
+	var user UserInfo
+	err = json.Unmarshal(contents, &user)
+	if err != nil {
+		app.errorLog.Printf("failed unmarshalling the content : %s", err.Error())
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+	// Add the user to the session, so that they are now 'logged
+	// in'.
+	app.session.Put(r, "user", user)
+	app.session.Put(r, "flash", "You've been logged in successfully!")
+	http.Redirect(w, r, "/", http.StatusOK)
+
 }
