@@ -12,3 +12,7 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 	// Use the new render helper.
 	app.render(w, r, "home.page.go.tmpl", &templateData{})
 }
+func (app *application) Display(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "display.page.go.tmpl", &templateData{})
+
+}

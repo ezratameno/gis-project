@@ -3,6 +3,8 @@
 <html lang='en'>
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-sacle=1.0">
         <title>{{template "title" .}} - Snipperbox</title>
         <!-- Link to the CSS stylesheet and favicon -->
         <!-- Also link to some fonts hosted by Google -->
@@ -17,13 +19,12 @@
                 <a class="navbar-brand" href="/user/login"> Login </a>
                 <a class="nav-link" href="/user/login"> Login </a>
             {{end}}
-            {{if .IsAuthenticated}}
-                <a class="navbar-brand" href="/user/logout"> Logout </a>
-            {{end}}
+           
             {{if .IsAuthenticated}}
                 <a class="navbar-brand"> Welcome {{.Email}} </a>
+                <a class="navbar-brand" href="/display"> Display </a>
+                <a class="navbar-brand" href="/user/logout"> Logout </a>
             {{end}}
-
         </nav>
 
         <main>

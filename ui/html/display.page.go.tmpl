@@ -1,0 +1,42 @@
+{{template "base" .}}
+{{define "title"}}Display{{end}}
+{{define "main"}}
+    <style>
+        #container {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+        #map {
+        height: 80vh;
+        width: 80vw;
+        }
+    </style>
+    <p> sdfdsfdsf</p>
+    <div id="container">
+        <div id="map"> </div>
+    </div>
+    <script>
+        // Initialize and add the map
+        function initMap() {
+        32.01482928864921, 34.773672350670545
+          // The location of Hit
+          const HIT = { lat:  32.01482928864921, lng: 34.773672350670545 };
+          // The map, centered at Uluru
+          const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 18,
+            center: HIT,
+          });
+          // The marker, positioned at Hit
+          const marker = new google.maps.Marker({
+            position: HIT,
+            map: map,
+          });
+          window.initMap = initMap;
+
+}
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGZF1ULkTEXSwQSG8TVJr-X-MySnsbh3w&callback=initMap">
+    </script>
+{{end}}
