@@ -79,8 +79,8 @@ func (app *application) addDefalutData(td *templateData, r *http.Request) *templ
 	td.IsAuthenticated = app.isAuthenticated(r)
 	if app.session.Get(r, "user") != nil {
 		td.Email = app.session.Get(r, "user").(UserInfo).Email
-
 	}
+	td.GoogleMapsApiKey = GoogleMapsApiKey
 	return td
 }
 

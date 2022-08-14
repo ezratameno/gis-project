@@ -15,11 +15,12 @@ import (
 // Add a new CSRFToken field to the templateData.
 
 type templateData struct {
-	CurrentYear     int
-	Flash           string
-	IsAuthenticated bool
-	CSRFToken       string
-	Email           string
+	CurrentYear      int
+	Flash            string
+	IsAuthenticated  bool
+	CSRFToken        string
+	Email            string
+	GoogleMapsApiKey string
 }
 
 // Create a humanDate function which returns a nicely formatted string
