@@ -88,3 +88,13 @@ func (app *application) addDefalutData(td *templateData, r *http.Request) *templ
 func (app *application) isAuthenticated(r *http.Request) bool {
 	return app.session.Exists(r, "user")
 }
+
+type Markers struct {
+	Markers []Marker `json:"markers"`
+}
+
+type Marker struct {
+	Name      string  `json:"name"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+}

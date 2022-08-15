@@ -21,6 +21,7 @@ type templateData struct {
 	CSRFToken        string
 	Email            string
 	GoogleMapsApiKey string
+	Markers          []Marker
 }
 
 // Create a humanDate function which returns a nicely formatted string

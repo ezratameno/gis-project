@@ -1,0 +1,35 @@
+{
+    "markers":[
+        {   
+            "name": "Building 8",
+            "latitude": 32.01406866966708,
+            "longitude": 34.77295615498032 
+        },
+        {   
+            "name": "Building 7",
+            "latitude": 32.01419375569898,
+            "longitude": 34.7744742852358 
+        },
+        {   
+            "name": "Building 6",
+            "latitude": 32.014382521576714,
+            "longitude": 34.77395393670923 
+        },
+        {   
+            "name": "Building 5",
+            "latitude": 32.01463212405745,
+            "longitude": 34.77331422987217 
+        },
+        {   
+            "name": "Building 2",
+            "latitude": 32.0158647750755,
+            "longitude": 34.7730493618491 
+        },
+        {   
+            "name": "Building 1",
+            "latitude": 32.01610584511398,
+            "longitude": 34.772955484465804
+        }
+    ] 
+    
+}

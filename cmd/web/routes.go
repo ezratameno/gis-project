@@ -27,8 +27,6 @@ func (app *application) routes() http.Handler {
 	mux := pat.New()
 	mux.Get("/user/login", dynamicMiddleware.ThenFunc(app.Login))
 	mux.Get("/user/logout", dynamicMiddleware.Append(app.requireAuthentication).ThenFunc(app.Logout))
-	mux.Get("/display", dynamicMiddleware.Append(app.requireAuthentication).ThenFunc(app.Display))
-
 	mux.Get("/", dynamicMiddleware.ThenFunc(app.Home))
 
 	mux.Get("/callback", dynamicMiddleware.ThenFunc(app.Callback))

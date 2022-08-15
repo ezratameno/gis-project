@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
+	"os"
 )
 
 func (app *application) NotFound(w http.ResponseWriter, r *http.Request) {
@@ -9,10 +11,17 @@ func (app *application) NotFound(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) Home(w http.ResponseWriter, r *http.Request) {
-	// Use the new render helper.
-	app.render(w, r, "home.page.go.tmpl", &templateData{})
-}
-func (app *application) Display(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "display.page.go.tmpl", &templateData{})
-
+	// Get the markers info
+	b, err := os.ReadFile("./markers.json")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	var markers Markers
+	err = json.Unmarshal(b, &markers)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	app.render(w, r, "home.page.go.tmpl", &templateData{Markers: markers.Markers})
 }
