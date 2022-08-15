@@ -26,23 +26,34 @@
           const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 18,
             center: HIT,
+            mapTypeId: 'satellite',
             mapId: 'fead973edada4cc0'
           });
+          let heatmapData = [];
 
           {{range .Markers}}
           // The marker, positioned at Hit
+            heatmapData.push(
+                {location: new google.maps.LatLng({{.Latitude}},{{.Longitude}}),
+                weight:5});
             marker = new google.maps.Marker({
             position: { lat: {{.Latitude}}, lng: {{.Longitude}} },
             label: "{{.Name}}",
             animation: google.maps.Animation.BOUNCE,
             map: map,
            });
+           var heatmap = new google.maps.visualization.HeatmapLayer({
+            data: heatmapData,
+            radius: 50,
+            map: map
+            });
+           heatmap.setMap(map);
            
           
           {{end}} 
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{.GoogleMapsApiKey}}&callback=initMap">
+    <script src="https://maps.googleapis.com/maps/api/js?key={{.GoogleMapsApiKey}}&libraries=visualization&callback=initMap">
     </script>
 {{end}}
 {{end}}
