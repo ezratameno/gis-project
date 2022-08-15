@@ -14,12 +14,20 @@
         width: 80vw;
         }
     </style>
+    <div class="d-flex justify-content-center my-4">
+        <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+        <form class="range-field w-25">
+            <input id="hour" class="border-0" type="range" min="0" max="24" onchange="initMap()" />
+        </form>
+        <span class="font-weight-bold indigo-text ml-2 mt-1">24</span>
+    </div>
     <div id="container">
         <div id="map"> </div>
     </div>
     <script>
         // Initialize and add the map
         function initMap() {
+        let hour = Number(document.getElementById("hour").value);
           // The location of Hit
           const HIT = { lat:  32.01482928864921, lng: 34.773672350670545 };
           // The map, centered at HIT
@@ -44,10 +52,11 @@
            });
            var heatmap = new google.maps.visualization.HeatmapLayer({
             data: heatmapData,
-            radius: 50,
+            radius: hour,
             map: map
             });
            heatmap.setMap(map);
+           console.log(hour)
            
           
           {{end}} 
