@@ -13,14 +13,30 @@
         height: 80vh;
         width: 80vw;
         }
+        #hour {
+        -webkit-apperarance: none;
+        width: 100%;
+        height: 7px;
+        outline: none;
+        border-radius: 3px;
+
+        }
     </style>
-    <div class="d-flex justify-content-center my-4">
-        <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
-        <form class="range-field w-25">
-            <input id="hour" class="border-0" type="range" min="0" max="24" onchange="initMap()" />
-        </form>
-        <span class="font-weight-bold indigo-text ml-2 mt-1">24</span>
+    <div class="container">
+        <div class="row">
+                <h4 id="hour-text" class="text-center"></h4>
+        </div>
+        <div class="d-flex justify-content-center my-4">
+          <span class="font-weight-bold purple-text mr-2 mt-1">0</span>
+          <form class="range-field w-75">
+            <input id="hour" class="border-0" type="range" min="0" max="23" onchange="initMap()" />
+          </form>
+          <span class="font-weight-bold purple-text ml-2 mt-1">23</span>
+        </div>
+        <p>You can scroll through the hours bar to see the amount of noise on average in HIT at each hour.</p>
+      
     </div>
+
     <div id="container">
         <div id="map"> </div>
     </div>
@@ -28,6 +44,7 @@
         // Initialize and add the map
         function initMap() {
         let hour = Number(document.getElementById("hour").value);
+        document.getElementById("hour-text").textContent="The hour is: " +hour+":00";
           // The location of Hit
           const HIT = { lat:  32.01482928864921, lng: 34.773672350670545 };
           // The map, centered at HIT
