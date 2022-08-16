@@ -51,7 +51,6 @@
           const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 18,
             center: HIT,
-            mapTypeId: 'satellite',
             mapId: 'fead973edada4cc0'
           });
           let heatmapData = [];
@@ -67,9 +66,21 @@
             animation: google.maps.Animation.BOUNCE,
             map: map,
            });
+           
+           radius =0;
+           if (hour <= 7) {
+            radius = 0;
+           } else if (hour >=8 && hour <=15)  {
+            radius=60;
+           } else if (hour==23){
+              radius=12;
+           } else {
+              radius=30;
+
+           }
            var heatmap = new google.maps.visualization.HeatmapLayer({
             data: heatmapData,
-            radius: hour,
+            radius: radius,
             map: map
             });
            heatmap.setMap(map);
