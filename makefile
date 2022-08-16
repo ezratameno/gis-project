@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 build:
-	go build -o gis-project ./cmd/
+	go build -o gis-project ./cmd/web
 
 run: 
 	go run ./cmd/web/

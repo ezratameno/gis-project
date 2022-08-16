@@ -1,10 +1,13 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"net/http"
-	"os"
 )
+
+//go:embed markers.json
+var markers embed.FS
 
 func (app *application) NotFound(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("sorry we don't have this page :("))
@@ -12,7 +15,8 @@ func (app *application) NotFound(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 	// Get the markers info
-	b, err := os.ReadFile("./markers.json")
+
+	b, err := markers.ReadFile("markers.json")
 	if err != nil {
 		app.serverError(w, err)
 		return
