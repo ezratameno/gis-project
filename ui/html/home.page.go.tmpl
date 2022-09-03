@@ -4,7 +4,8 @@
 {{if .IsAuthenticated}}
     <style>
         #container {
-        height: 100vh;
+        height: 80vh;
+        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -22,7 +23,7 @@
 
         }
     </style>
-    <div class="container">
+    <div class="container" class="mb-4">
         <div class="row">
                 <h4 id="hour-text" class="text-center"></h4>
         </div>
@@ -37,14 +38,14 @@
       
     </div>
 
-    <div id="container">
+    <div id="container" >
         <div id="map"> </div>
     </div>
     <script>
         // Initialize and add the map
         function initMap() {
         let hour = Number(document.getElementById("hour").value);
-        document.getElementById("hour-text").textContent="The hour is: " +hour+":00";
+        document.getElementById("hour-text").textContent="Currently you are viewing the average noise amount at " +hour+":00";
           // The location of Hit
           const HIT = { lat:  32.01482928864921, lng: 34.773672350670545 };
           // The map, centered at HIT
@@ -84,7 +85,6 @@
             map: map
             });
            heatmap.setMap(map);
-           console.log(hour)
            
           
           {{end}} 
